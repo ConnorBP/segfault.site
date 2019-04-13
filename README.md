@@ -18,4 +18,8 @@ I am going to transfer as many projects i've made in the past onto here from eit
 
 hmmmmmmmmmmm... how _shooould_ people contact me?
 
-I can usually be found on **Discord** @ `h3k#5914`
+I can usually be found in one of these places:
+
+- **Discord** @ `h3k#5914`
+- **Gitter** `@ConnorBP`
+- Taking the last cup of coffee
