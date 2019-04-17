@@ -4,6 +4,8 @@ Welcome to the land of spaghetti! Enjoy your stay, and don't mind the bugs.
 
 ### Github Projects
 
+- [a rusty rocket web-service](https://github.com/ConnorBP/rocket-web-service)
+- [a rusty teensy-weensy-micro controller](https://github.com/ConnorBP/Rusted-Teensy-Base)
 - Super Duper secret hidden stuff
 - Various forks
   
