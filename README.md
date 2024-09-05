@@ -5,7 +5,7 @@
 Take a look at some of my favourite publicly listed projects :)
 
 - ["lychee": advanced GPU shader based DMA hacking software](https://github.com/ConnorBP/lychee)
-- [rustlang p2p WASM game](https://github.com/ConnorBP/wasm_battle_arena) ( [LIVE DEMO](ghost.segfault.site) )
+- [rustlang p2p WASM game](https://github.com/ConnorBP/wasm_battle_arena) ( [LIVE DEMO](https://ghost.segfault.site) )
 - [angular 17 web-store](https://github.com/ConnorBP/angular_shop) ( [LIVE DEMO](https://angular.segfault.site) )
 - [inputflow: input control plugin abstraction library](https://github.com/ConnorBP/inputflow)
 - [pixel-art editor and RLE encoding utility](https://github.com/ConnorBP/sixteenbit)
