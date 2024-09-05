@@ -4,11 +4,11 @@
 
 Take a look at some of my favourite publicly listed projects :)
 
-- ["lychee": advanced GPU shader based DMA hacking software](https://github.com/ConnorBP/lychee)
-- [rustlang p2p WASM game](https://github.com/ConnorBP/wasm_battle_arena) ( [LIVE DEMO](https://ghost.segfault.site) )
-- [angular 17 web-store](https://github.com/ConnorBP/angular_shop) ( [LIVE DEMO](https://angular.segfault.site) )
+- [lychee: advanced GPU shader based DMA hacking software](https://github.com/ConnorBP/lychee)
+- [wasm-battle-arena: rustlang p2p WASM game with ghosties and lasers!](https://github.com/ConnorBP/wasm_battle_arena) ( [LIVE DEMO](https://ghost.segfault.site) )
+- [angular 17 web-store demo](https://github.com/ConnorBP/angular_shop) ( [LIVE DEMO](https://angular.segfault.site) )
 - [inputflow: input control plugin abstraction library](https://github.com/ConnorBP/inputflow)
-- [pixel-art editor and RLE encoding utility](https://github.com/ConnorBP/sixteenbit)
+- [sixteenbit: pixel-art editor and RLE encoding utility](https://github.com/ConnorBP/sixteenbit)
 - [internal game hack proof of concept](https://github.com/ConnorBP/0x1337)
 - [react-js tic-tac-toe](https://github.com/ConnorBP/react-tictactoe)
 - [proof of concept caesarean cypher malware dropper source](https://github.com/ConnorBP/dropper)
@@ -27,9 +27,9 @@ Take a look at some of my favourite publicly listed projects :)
 
 ### Some things I like
 
-- [Shadertoy](https://www.shadertoy.com/view/Ms2SD1) <- not mine btw :^) but _[this](https://www.shadertoy.com/view/WdSSRd)_ blobby-like thing is mine
+- [Shadertoy](https://www.shadertoy.com/view/WdSSRd) little ray-marching shader I made on shadertoy
 - [Godot](https://github.com/godotengine/godot) _an open source game engine_
-- [memflow-rs](https://memflow.io/)
+- [memflow-rs](https://memflow.io/) memory introspection plugin framework
 
 ### Contact
 
@@ -37,7 +37,8 @@ hmmmmmmmmmmm... how _shooould_ people contact me?
 
 I can usually be found in one of these places:
 
-- **Discord** @ `segfault1337`
-- **Gitter** `@ConnorBP`
+- **Discord** `@segfault1337`
 - **Email** [connor.postma@gmail.com](mailto:connor.postma@gmail.com)
 - Taking the last cup of coffee
+
+#########################################################################
