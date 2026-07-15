@@ -205,7 +205,7 @@ h1 em, h2 em { color: transparent; font-style: normal; -webkit-text-stroke: 1px 
 .project-overview { max-width: 800px; color: var(--muted); font-size: clamp(.92rem, 1.4vw, 1.05rem); }
 .project-overview p:first-child { margin-top: 0; color: var(--text); }
 .project-overview .tag-list { margin-top: 2rem; }
-.project-gallery { display: grid; gap: 1rem; }
+.project-visual-content, .project-gallery { display: grid; gap: 1rem; }
 .project-gallery figure { margin: 0; overflow: hidden; border: 1px solid var(--line); background: #090c12; }
 .project-gallery img { width: 100%; height: auto; max-height: 700px; object-fit: contain; }
 .repo-card { border: 1px solid var(--line); background: var(--panel); box-shadow: 10px 10px 0 rgba(141, 107, 255, .08); }

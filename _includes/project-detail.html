@@ -34,13 +34,14 @@
       <p class="eyebrow"><span aria-hidden="true">02.</span> VISUALS</p>
       <h2 id="visuals-title">Project files</h2>
     </div>
-    {% if details.gallery.size > 0 %}
-      <div class="project-gallery">
-        {% for image in details.gallery %}
-          <figure><img src="{{ image | relative_url }}" alt="{{ project.title }} project preview{% if details.gallery.size > 1 %} {{ forloop.index }}{% endif %}" width="1400" height="900" loading="lazy"></figure>
-        {% endfor %}
-      </div>
-    {% else %}
+    <div class="project-visual-content">
+      {% if details.gallery.size > 0 %}
+        <div class="project-gallery">
+          {% for image in details.gallery %}
+            <figure><img src="{{ image | relative_url }}" alt="{{ project.title }} project preview{% if details.gallery.size > 1 %} {{ forloop.index }}{% endif %}" width="1400" height="900" loading="lazy"></figure>
+          {% endfor %}
+        </div>
+      {% endif %}
       <div class="repo-card">
         <div class="repo-card-head"><span aria-hidden="true">~/</span><strong>{{ project.repo | split: '/' | last }}</strong><span>{{ details.stars }} ★</span></div>
         <p>{{ details.about | default: project.description }}</p>
@@ -51,7 +52,7 @@
         {% endif %}
         <div class="repo-card-foot"><span>{{ details.language }}</span><span>branch: {{ details.branch }}</span></div>
       </div>
-    {% endif %}
+    </div>
   </section>
 
   {% if page.fullscreen %}

@@ -184,7 +184,9 @@ class BuildOutputTests(unittest.TestCase):
             self.assertEqual(len(source_links), 1, f"missing source link in {path}")
             self.assertRegex(source_links[0].get("href") or "", r"^https://github\.com/ConnorBP/[^/]+$")
             self.assertTrue(any("project-overview" in (attrs.get("class") or "").split() for tag, attrs in doc.tags if tag == "div"), f"missing overview in {path}")
-            self.assertTrue(any("project-gallery" in (attrs.get("class") or "").split() or "repo-card" in (attrs.get("class") or "").split() for tag, attrs in doc.tags), f"missing visual fallback in {path}")
+            self.assertTrue(any("repo-card" in (attrs.get("class") or "").split() for tag, attrs in doc.tags), f"missing repository card in {path}")
+            if any("project-gallery" in (attrs.get("class") or "").split() for tag, attrs in doc.tags):
+                self.assertTrue(any(attrs.get("aria-label") == "Repository files" for tag, attrs in doc.tags if tag == "ul"), f"gallery must retain repository files in {path}")
 
     def test_regression_game_pages_combine_overview_and_demo(self) -> None:
         for page, title, host in (("car.html", "Crossy Cars", "car.segfault.site"), ("ghost.html", "WASM Battle Arena", "ghost.segfault.site")):
