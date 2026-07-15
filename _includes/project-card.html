@@ -1,0 +1,17 @@
+<article class="project-card{% if include.featured %} featured{% endif %}">
+  <a class="project-image" href="{{ include.project.repo }}" aria-label="View {{ include.project.title }} on GitHub">
+    <img src="{{ '/assets/images/projects/' | append: include.project.slug | append: '.svg' | relative_url }}" alt="" width="800" height="450" loading="lazy">
+  </a>
+  <div class="project-content">
+    <div class="project-kicker"><span>PROJECT_{{ include.index | prepend: '0' | slice: -2, 2 }}</span><span aria-hidden="true">//</span></div>
+    <h3><a href="{{ include.project.repo }}">{{ include.project.title }}</a></h3>
+    <p>{{ include.project.description }}</p>
+    <ul class="tag-list" aria-label="Technologies">
+      {% for tag in include.project.tags %}<li>{{ tag }}</li>{% endfor %}
+    </ul>
+    <div class="project-links">
+      <a href="{{ include.project.repo }}">Source <span aria-hidden="true">↗</span></a>
+      {% if include.project.demo %}<a href="{{ include.project.demo }}">Live demo <span aria-hidden="true">↗</span></a>{% endif %}
+    </div>
+  </div>
+</article>

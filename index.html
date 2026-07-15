@@ -1,0 +1,88 @@
+---
+layout: default
+title: Software Engineer & Security Researcher
+description: Connor Postma builds systems, games, developer tools, and security research projects.
+---
+<header class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow"><span aria-hidden="true">01.</span> HELLO, WORLD</p>
+    <h1>I build at the edge of<br><em>code &amp; chaos.</em></h1>
+    <p class="hero-lede">Software engineer and security researcher exploring compilers, game engines, low-level systems, and the strange machinery underneath.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#projects">Explore projects <span aria-hidden="true">↓</span></a>
+      <a class="button button-quiet" href="https://github.com/ConnorBP">GitHub <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+  <div class="terminal" aria-label="Developer profile summary">
+    <div class="terminal-bar"><span></span><span></span><span></span><b>profile.sh</b></div>
+    <div class="terminal-body">
+      <p><span class="prompt">❯</span> whoami</p>
+      <p class="output">Connor Postma</p>
+      <p><span class="prompt">❯</span> cat focus.txt</p>
+      <p class="output">systems · security · games<br>compilers · developer tooling</p>
+      <p><span class="prompt">❯</span> uptime</p>
+      <p class="output">always shipping<span class="cursor" aria-hidden="true"></span></p>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="projects" aria-labelledby="featured-title">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow"><span aria-hidden="true">02.</span> SELECTED WORK</p>
+      <h2 id="featured-title">Featured projects</h2>
+    </div>
+    <p>Experiments that escaped <code>localhost</code>.</p>
+  </div>
+
+  <div class="project-grid featured-grid">
+    {% assign featured = site.data.projects | where: 'featured', true %}
+    {% for project in featured %}
+      {% include project-card.html project=project featured=true index=forloop.index %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section archive" aria-labelledby="archive-title">
+  <div class="section-heading compact">
+    <div>
+      <p class="eyebrow"><span aria-hidden="true">03.</span> THE ARCHIVE</p>
+      <h2 id="archive-title">More transmissions</h2>
+    </div>
+    <p>{{ site.data.projects.size }} public builds and counting.</p>
+  </div>
+
+  <div class="project-grid archive-grid">
+    {% assign archive = site.data.projects | where_exp: 'project', 'project.featured != true' %}
+    {% for project in archive %}
+      {% include project-card.html project=project index=forloop.index %}
+    {% endfor %}
+  </div>
+</section>
+
+<section class="about-section" id="about" aria-labelledby="about-title">
+  <div>
+    <p class="eyebrow"><span aria-hidden="true">04.</span> ABOUT</p>
+    <h2 id="about-title">Curiosity with<br><em>root access.</em></h2>
+  </div>
+  <div class="about-copy">
+    <p>I like learning how complex things work, then building something stranger from the pieces. My projects move between native systems, interactive graphics, web software, embedded hardware, and security research.</p>
+    <p>When I am not staring at a debugger, I am probably making a game, experimenting with Rust, or taking the last cup of coffee.</p>
+    <div class="meme-signoff"><img src="{{ '/thisisfine.png' | relative_url }}" alt="This is fine dog" width="70" height="90" loading="lazy"><span>runtime status:<br><strong>this is fine.</strong></span></div>
+    <ul class="interest-list" aria-label="Current interests">
+      <li><a href="https://www.shadertoy.com/view/WdSSRd">Shader art <span aria-hidden="true">↗</span></a></li>
+      <li><a href="https://github.com/godotengine/godot">Godot <span aria-hidden="true">↗</span></a></li>
+      <li><a href="https://memflow.io/">Memflow <span aria-hidden="true">↗</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<section class="contact-section" id="contact" aria-labelledby="contact-title">
+  <p class="eyebrow"><span aria-hidden="true">05.</span> OPEN CHANNEL</p>
+  <h2 id="contact-title">Let’s make something<br><em>dangerously interesting.</em></h2>
+  <p>Have a project, a weird technical problem, or just want to trade ideas?</p>
+  <div class="contact-links">
+    <a class="button button-primary" href="mailto:connor.postma@gmail.com">Send an email <span aria-hidden="true">↗</span></a>
+    <span>Discord <strong>@segfault1337</strong></span>
+  </div>
+</section>

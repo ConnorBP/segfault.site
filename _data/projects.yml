@@ -1,0 +1,153 @@
+- slug: crossy-cars
+  title: Crossy Cars
+  description: An isometric arcade driving game built with Rust, Bevy, and WebAssembly.
+  tags: [Rust, Bevy, WASM]
+  repo: https://github.com/ConnorBP/crossy_cars
+  demo: https://car.segfault.site
+  featured: true
+
+- slug: ember-lang
+  title: Ember Language
+  description: A sandboxed, hot-reloadable scripting language that JIT-compiles to native x86-64.
+  tags: [C++, JIT, Compilers]
+  repo: https://github.com/ConnorBP/ember-lang
+  featured: true
+
+- slug: swarm-pi
+  title: Swarm for Pi
+  description: Async sub-agent orchestration, workflows, and autonomous task decomposition for Pi.
+  tags: [TypeScript, Agents, Tooling]
+  repo: https://github.com/ConnorBP/swarm-pi
+  featured: true
+
+- slug: pixel-intelligence
+  title: Pixel Intelligence
+  description: A full-stack pixel-art editor with K-means processing and generative AI tools.
+  tags: [React, AI, Image Processing]
+  repo: https://github.com/ConnorBP/pixel-intelligence
+  demo: https://229-pixelai.netlify.app
+  featured: true
+
+- slug: lychee
+  title: Lychee
+  description: A GPU-accelerated DMA memory trainer and game telemetry overlay.
+  tags: [Rust, DMA, GPU]
+  repo: https://github.com/ConnorBP/lychee
+  featured: true
+
+- slug: wasm-battle-arena
+  title: WASM Battle Arena
+  description: A peer-to-peer Rust and WebAssembly arena game with ghosties and lasers.
+  tags: [Rust, WebRTC, WASM]
+  repo: https://github.com/ConnorBP/wasm_battle_arena
+  demo: /ghost
+  featured: true
+
+- slug: angular-shop
+  title: Angular Shop
+  description: A modern storefront demo built with Angular 17.
+  tags: [Angular, TypeScript, Web]
+  repo: https://github.com/ConnorBP/angular_shop
+  demo: https://angular.segfault.site
+
+- slug: inputflow
+  title: InputFlow
+  description: A flexible input-control plugin abstraction library.
+  tags: [Input, Plugins, Library]
+  repo: https://github.com/ConnorBP/inputflow
+
+- slug: sixteenbit
+  title: SixteenBit
+  description: A pixel-art editor and run-length encoding utility.
+  tags: [Pixel Art, RLE, Tools]
+  repo: https://github.com/ConnorBP/sixteenbit
+
+- slug: "0x1337"
+  title: "0x1337"
+  description: An educational internal game-hacking proof of concept.
+  tags: [C++, Reverse Engineering, Research]
+  repo: https://github.com/ConnorBP/0x1337
+
+- slug: react-tictactoe
+  title: React Tic-Tac-Toe
+  description: The classic strategy game recreated as a responsive React app.
+  tags: [React, JavaScript, Game]
+  repo: https://github.com/ConnorBP/react-tictactoe
+
+- slug: dropper
+  title: Dropper POC
+  description: A Caesar-cipher payload dropper proof of concept for security research.
+  tags: [Security, Cryptography, Research]
+  repo: https://github.com/ConnorBP/dropper
+
+- slug: usb-host-passthrough
+  title: USB Host Passthrough
+  description: Teensy 4 mouse-input emulation and passthrough firmware.
+  tags: [Teensy, Embedded, USB]
+  repo: https://github.com/ConnorBP/usb_host_passthrough
+
+- slug: go-webapi-utils
+  title: Go Web API Utils
+  description: Lightweight utilities for serverless REST APIs written in Go.
+  tags: [Go, REST, Serverless]
+  repo: https://github.com/ConnorBP/go-webapi-utils
+
+- slug: benchme
+  title: BenchMe
+  description: Small, practical benchmarking macros for Rust projects.
+  tags: [Rust, Benchmarking, Macros]
+  repo: https://github.com/ConnorBP/benchme
+
+- slug: pokemon-git-tracker
+  title: Pokémon Git Tracker
+  description: A Git-powered utility for tracking Pokémon data and changes.
+  tags: [Git, Automation, Tooling]
+  repo: https://github.com/ConnorBP/pokemon-git-tracker
+
+- slug: segfault-ranks
+  title: Segfault Ranks
+  description: An ELO ranking system plugin for multiplayer game servers.
+  tags: [ELO, Game Server, Plugin]
+  repo: https://github.com/ConnorBP/segfault-ranks
+
+- slug: segfault-database
+  title: Segfault Database
+  description: The persistence layer supporting the Segfault ranking system.
+  tags: [Database, Backend, ELO]
+  repo: https://github.com/ConnorBP/segfault_database
+
+- slug: bob-os
+  title: Bob OS
+  description: A from-scratch operating-system proof of concept.
+  tags: [OSDev, Low Level, Systems]
+  repo: https://github.com/ConnorBP/Bob-OS
+
+- slug: biobox
+  title: BioBox
+  description: A virtual machine and assembler implemented in Rust.
+  tags: [Rust, VM, Assembler]
+  repo: https://github.com/ConnorBP/biobox
+
+- slug: nerd-simulator
+  title: Nerd Simulator
+  description: A Pong-style game experiment built with the Amethyst engine.
+  tags: [Rust, Amethyst, Game]
+  repo: https://github.com/ConnorBP/NerdSimulator
+
+- slug: rocket-web-service
+  title: Rocket Web Service
+  description: A compact web service built with Rust and Rocket.
+  tags: [Rust, Rocket, API]
+  repo: https://github.com/ConnorBP/rocket-web-service
+
+- slug: rusted-teensy
+  title: Rusted Teensy Base
+  description: A Rust foundation for building Teensy microcontroller projects.
+  tags: [Rust, Teensy, Embedded]
+  repo: https://github.com/ConnorBP/Rusted-Teensy-Base
+
+- slug: super-marble-battle
+  title: Super Marble Battle
+  description: A physics-driven marble game built in the Godot engine.
+  tags: [Godot, Game, Physics]
+  repo: https://github.com/ConnorBP/SuperMarbleBattle

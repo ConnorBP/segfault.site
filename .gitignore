@@ -1,4 +1,7 @@
 .vscode
+.bundle
 _site
 .jekyll-cache
 .sass-cache
+tmp
+vendor
