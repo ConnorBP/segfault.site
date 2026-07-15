@@ -1,0 +1,64 @@
+{% capture project_slug %}{{ page.project }}{% endcapture %}
+{% assign project = site.data.projects | where: 'slug', project_slug | first %}
+{% assign details = site.data.project_details[project_slug] %}
+<article class="project-page">
+  <header class="project-hero">
+    <p class="eyebrow"><span aria-hidden="true">PROJECT.</span> {{ project.tags | join: ' · ' | upcase }}</p>
+    <h1>{{ project.title }}</h1>
+    <p class="project-lede">{{ details.about | default: project.description }}</p>
+    <div class="demo-actions">
+      <a class="button button-primary source-link" href="{{ project.repo }}">Source code <span aria-hidden="true">↗</span></a>
+      {% if page.fullscreen %}
+        <a class="button button-quiet fullscreen-link" href="{{ page.fullscreen }}">Open full screen <span aria-hidden="true">↗</span></a>
+      {% elsif project.demo %}
+        <a class="button button-quiet" href="{{ project.demo }}">Live demo <span aria-hidden="true">↗</span></a>
+      {% endif %}
+    </div>
+  </header>
+
+  <section class="project-section" aria-labelledby="overview-title">
+    <div class="project-section-label">
+      <p class="eyebrow"><span aria-hidden="true">01.</span> README</p>
+      <h2 id="overview-title">Overview</h2>
+    </div>
+    <div class="project-overview">
+      {% for paragraph in details.overview %}<p>{{ paragraph }}</p>{% endfor %}
+      <ul class="tag-list" aria-label="Technologies">
+        {% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <section class="project-section project-visuals" aria-labelledby="visuals-title">
+    <div class="project-section-label">
+      <p class="eyebrow"><span aria-hidden="true">02.</span> VISUALS</p>
+      <h2 id="visuals-title">Project files</h2>
+    </div>
+    {% if details.gallery.size > 0 %}
+      <div class="project-gallery">
+        {% for image in details.gallery %}
+          <figure><img src="{{ image | relative_url }}" alt="{{ project.title }} project preview{% if details.gallery.size > 1 %} {{ forloop.index }}{% endif %}" width="1400" height="900" loading="lazy"></figure>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="repo-card">
+        <div class="repo-card-head"><span aria-hidden="true">~/</span><strong>{{ project.repo | split: '/' | last }}</strong><span>{{ details.stars }} ★</span></div>
+        <p>{{ details.about | default: project.description }}</p>
+        {% if details.files.size > 0 %}
+          <ul aria-label="Repository files">{% for file in details.files %}<li><span aria-hidden="true">{% if file contains: '.' %}▤{% else %}▣{% endif %}</span>{{ file }}</li>{% endfor %}</ul>
+        {% else %}
+          <p class="repo-unavailable">{% if details.available == false %}Repository is no longer public; this archived overview remains available.{% else %}Repository preview unavailable.{% endif %}</p>
+        {% endif %}
+        <div class="repo-card-foot"><span>{{ details.language }}</span><span>branch: {{ details.branch }}</span></div>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if page.fullscreen %}
+    <section class="project-demo" aria-labelledby="demo-title">
+      <p class="eyebrow"><span aria-hidden="true">03.</span> LIVE BUILD</p>
+      <h2 id="demo-title">Play in browser</h2>
+      <iframe class="game-frame" title="{{ project.title }} game" src="{{ page.fullscreen }}" loading="lazy" allowfullscreen></iframe>
+    </section>
+  {% endif %}
+</article>

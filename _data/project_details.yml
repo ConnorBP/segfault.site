@@ -1,0 +1,480 @@
+"0x1337":
+  about: "best cheatos"
+  available: true
+  branch: "main"
+  language: "C++"
+  stars: 1
+  thumbnail: "/assets/images/projects/0x1337.svg"
+  files:
+    - "0x1337"
+    - ".gitattributes"
+    - ".gitignore"
+    - "0x1337.sln"
+    - "README.md"
+  gallery: []
+  overview:
+    - "This is a fairly basic CSGO Internal Cheat utilizing Nuklear for GUI. Designed this to learn Nuklear gui and try out some novel internal features and detection evaision methods."
+"angular-shop":
+  about: "A demo webstore designed in angular"
+  available: true
+  branch: "main"
+  language: "Angular"
+  stars: 1
+  thumbnail: "/assets/images/projects/angular-shop.svg"
+  files:
+    - "e2e"
+    - "src"
+    - ".DS_Store"
+    - ".gitattributes"
+    - ".gitignore"
+    - "README.md"
+    - "angular.json"
+    - "favicon.ico"
+    - "package.json"
+    - "tsconfig.app.json"
+  gallery: []
+  overview:
+    - "This repository has a demonstration of Angular framework version 17 usage for a simple online shopping website. I chose a magic the gathering focused game store as my store type, because I am a nerd. Inventory on the website fetches from a \"json api endpoint\" which is actually just a json file on the static hosting. I have also added a \"network delay simulation\" to allow the progress spinners to show up on the demo. This would of course not be included in a real production site."
+"benchme":
+  about: "A simple rust library to quickly benchmark your code blocks."
+  available: true
+  branch: "master"
+  language: "Rust"
+  stars: 6
+  thumbnail: "/assets/images/projects/benchme.svg"
+  files:
+    - "src"
+    - ".gitattributes"
+    - ".gitignore"
+    - ".travis.yml"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "LICENSE"
+    - "README.md"
+  gallery: []
+  overview:
+    - "A simple rust library to quickly benchmark your code blocks."
+"biobox":
+  about: "A register-based virtual machine called BIOBOX (Input Output Blackbox)"
+  available: true
+  branch: "master"
+  language: "Rust"
+  stars: 0
+  thumbnail: "/assets/images/projects/biobox.svg"
+  files:
+    - "src"
+    - ".gitignore"
+    - ".travis.yml"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "README.md"
+    - "example.asm"
+  gallery: []
+  overview:
+    - "BIOBox (Input Output Blackbox) is a virtual machine with a focus on providing user generated drop-in blackbox modules for rust or c++ code to transform inputs to the module to their respective outputs returned by the VM. The goal of such a ssytem is to obfuscate sensitive code or values from being easily found by decompilers, and to run safely in an isolated environment. The VM code you pass into it can be stored in an encrypted state until passed into the VM as well."
+"bob-os":
+  about: "A simple OS called Bob. (Written in rust) 🧔"
+  available: true
+  branch: "master"
+  language: "OSDev"
+  stars: 0
+  thumbnail: "/assets/images/projects/bob-os/gallery-1.png"
+  files:
+    - ".cargo"
+    - "image"
+    - "src"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "README.md"
+    - "rust-toolchain"
+    - "x86_64-bob_os.json"
+  gallery:
+    - "/assets/images/projects/bob-os/gallery-1.png"
+  overview:
+    - "A simple OS kernel written in rust, named Bob. 👨‍💻"
+"crossy-cars":
+  about: "Why did the chicken cross the road? To get hit by you, a reckless driver of course!"
+  available: true
+  branch: "master"
+  language: "Rust"
+  stars: 0
+  thumbnail: "/assets/images/projects/crossy-cars/gallery-1.png"
+  files:
+    - ".github"
+    - "assets"
+    - "crates"
+    - "docs"
+    - "leaderboard"
+    - "rules"
+    - "src"
+    - "tools"
+    - ".env.example"
+    - ".gitattributes"
+  gallery:
+    - "/assets/images/projects/crossy-cars/gallery-1.png"
+  overview:
+    - "Roady Car is an isometric arcade driving game built with Bevy 0.19. It runs as a native desktop application or in a WebGL2 browser through WebAssembly."
+    - "Play online: https://car.segfault.site"
+    - "The chicken-crossing riddle is reversed: you are the traffic. Race through a continuously recycled city, hit wandering chickens for points, collect coins, avoid innocent critters and oncoming cars, and keep the car alive until the clock expires."
+"dropper":
+  about: "Simple Dropper Program coded in C, with a simple cypher. For science!"
+  available: true
+  branch: "main"
+  language: "Security"
+  stars: 0
+  thumbnail: "/assets/images/projects/dropper.svg"
+  files:
+    - ".gitattributes"
+    - ".gitignore"
+    - "LICENSE"
+    - "README.md"
+    - "encoder.c"
+    - "main.c"
+  gallery: []
+  overview:
+    - "This is a simple dropper program that can dress whatever file it drops up with some tasty Caserean cypher. From the cyphered bytes created by my encoder program, it will then write to disk those bytes (in this case a cute little png dude), and then open it (on mac at least. Command to open files may vary on another OS.)"
+"ember-lang":
+  about: "Ember JIT scripting language for native x8664 execution"
+  available: true
+  branch: "master"
+  language: "C++"
+  stars: 2
+  thumbnail: "/assets/images/projects/ember-lang/gallery-1.png"
+  files:
+    - ".github"
+    - "ai-skills"
+    - "bench"
+    - "demo"
+    - "docs"
+    - "editors"
+    - "examples"
+    - "extensions"
+    - "img"
+    - "scripts"
+  gallery:
+    - "/assets/images/projects/ember-lang/gallery-1.png"
+  overview:
+    - "A native-JIT embedded scripting language. Ember compiles scripts to x86-64 machine code at runtime — no interpreter dispatch loop, no bytecode VM. A hot loop runs as real native instructions, not a switch-on-opcode interpreter, so it posts 6-7x faster than AngelScript's bytecode interpreter on compute- heavy workloads (fib, tightloop, nestedcalls) and within 1.04x of g++-O2 on integer division (the one path where ember's tree-walker codegen is already near-optimal). Around that core it ships a real sandbox (per-frame byte budget, stack-depth guard, recoverable traps — a fault unwinds to your host, it doesn't kill the process), hot-reload of live modules with stable dispatch slots, .em module bundling (signed, native-code bundles with a relocation contract, plus a v5 IR-on-disk variant that is re-emitted to x64 at load time), a VST3 audio plugin wrapper (write VST plugins fully in ember with hot-reload DSP), and a Rust-like syntax built for game-engine / modding embedding."
+"go-webapi-utils":
+  about: "utils for a golang lambda webapi"
+  available: true
+  branch: "main"
+  language: "Go"
+  stars: 0
+  thumbnail: "/assets/images/projects/go-webapi-utils.svg"
+  files:
+    - "db"
+    - "keyauth"
+    - "response"
+    - ".gitattributes"
+    - ".gitignore"
+    - "LICENSE"
+    - "README.md"
+    - "go.mod"
+    - "go.sum"
+    - "utils.go"
+  gallery: []
+  overview:
+    - "utils for a golang lambda webapi"
+"inputflow":
+  about: "User Input Device abstract plugin API."
+  available: true
+  branch: "master"
+  language: "Input"
+  stars: 5
+  thumbnail: "/assets/images/projects/inputflow.svg"
+  files:
+    - ".idea"
+    - "inputflow-example-loader"
+    - "inputflow-kmbox"
+    - "inputflow-native"
+    - "inputflow-qmp"
+    - "inputflow"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "LICENSE"
+  gallery: []
+  overview:
+    - "User Input Device abstract plugin API. Enables users to access one set of apis for sending mouse and keyboard input, then allowing the actual method of input to be swapped out at runtime. One such method may be WinAPI for example. Now supports the popular KMBox device as well for controlling user input. Heavily inspired by my favourite memory introspection crate memflow-rs."
+"lychee":
+  about: "DMA Memory Trainer for CSGO (legacy)"
+  available: true
+  branch: "main"
+  language: "Rust"
+  stars: 1
+  thumbnail: "/assets/images/projects/lychee.svg"
+  files:
+    - ".vscode"
+    - "arduino"
+    - "assets"
+    - "hazedumper"
+    - "src"
+    - ".gitattributes"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "README.md"
+  gallery: []
+  overview:
+    - "Lychee is a demonstration of advanced cheating techniques for DMA (direct memory access) cheating on counter strike global offensive. documentation"
+"nerd-simulator":
+  about: "A Pong-style game experiment built with the Amethyst engine."
+  available: false
+  branch: "master"
+  language: "Rust"
+  stars: 0
+  thumbnail: "/assets/images/projects/nerd-simulator.svg"
+  files: []
+  gallery: []
+  overview:
+    - "A Pong-style game experiment built with the Amethyst engine."
+"pixel-intelligence":
+  about: "Pixel art editor with generative AI functionality. Comp229 Group Project."
+  available: true
+  branch: "main"
+  language: "React"
+  stars: 8
+  thumbnail: "/assets/images/projects/pixel-intelligence/gallery-1.png"
+  files:
+    - ".vscode"
+    - "backend"
+    - "docs"
+    - "frontend"
+    - ".code-workspace"
+    - ".gitattributes"
+    - ".gitignore"
+    - "CODE_OF_CONDUCT.md"
+    - "COMP%20229%20-%20Group%20Project%20-%20Part%201%20-%20Instructions.html"
+    - "COMP229_Group21_ProjectRequirementsDocument.pdf"
+  gallery:
+    - "/assets/images/projects/pixel-intelligence/gallery-1.png"
+    - "/assets/images/projects/pixel-intelligence/gallery-2.png"
+    - "/assets/images/projects/pixel-intelligence/gallery-3.png"
+  overview:
+    - "Latest live demo can be viewed on Netlify"
+"pokemon-git-tracker":
+  about: "Tracks local github commits and notifes a shared group channel about the changes with a fun random pokemon attachment."
+  available: true
+  branch: "main"
+  language: "Git"
+  stars: 1
+  thumbnail: "/assets/images/projects/pokemon-git-tracker/gallery-1.png"
+  files:
+    - "assets"
+    - "lambdas"
+    - "screenshots"
+    - "scripts"
+    - "terraform"
+    - ".gitignore"
+    - "DESIGN.md"
+    - "README.md"
+    - "RepodexSynopsis.md"
+    - "RepodexSynopsis.pdf"
+  gallery:
+    - "/assets/images/projects/pokemon-git-tracker/gallery-1.png"
+  overview:
+    - "Tracks local Github commits and notifies a shared group channel about the changes with a fun random creature character attachment and motivational message."
+    - "Repodex is intended to enhance developer collaboration, and FUN! 🐻‍❄️"
+"react-tictactoe":
+  about: "A simple tictactoe game made in react-js for learning"
+  available: true
+  branch: "master"
+  language: "React"
+  stars: 0
+  thumbnail: "/assets/images/projects/react-tictactoe.svg"
+  files:
+    - "public"
+    - "src"
+    - ".gitignore"
+    - "README.md"
+    - "package.json"
+    - "yarn.lock"
+  gallery: []
+  overview:
+    - "This project was bootstrapped with Create React App. Code based on the following tutorial: https://reactjs.org/tutorial/tutorial.html"
+"rocket-web-service":
+  about: "A simple hello world web service made in rust 🦀 with rocket.rs 🚀"
+  available: true
+  branch: "master"
+  language: "Rust"
+  stars: 0
+  thumbnail: "/assets/images/projects/rocket-web-service.svg"
+  files:
+    - "src"
+    - "static"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "README.md"
+    - "rust-toolchain"
+  gallery: []
+  overview:
+    - "This is a simple hello world web service written in rust with the rocket.rs web service library (synchronous)."
+"rusted-teensy":
+  about: "A base project the build projects for the teensy 3.6 Cortex-M4 in Rust."
+  available: true
+  branch: "master"
+  language: "Rust"
+  stars: 4
+  thumbnail: "/assets/images/projects/rusted-teensy.svg"
+  files:
+    - ".cargo"
+    - "src"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "Makefile"
+    - "README.md"
+    - "layout.ld"
+    - "rust-toolchain"
+  gallery: []
+  overview:
+    - "What is this? This is a template for starting an embeded project with Rust on the Teensy3.6 or other Cortex M4 MK66FX1M0 board. It can be re-configured for just about any Cortex M board such as M3 or M7 if you change the memory mapped regions (in layout.ld) from the spec in it's manual datasheet."
+    - "This project is based on a tutorial blog post here, with updated utilities, newers api functions, and memory mapped for the Teensy3.6."
+    - "Another repositiory that looks useful as well: Cortex-M Quickstart"
+"segfault-database":
+  about: "The business logic and inbetween for my database and my apps which use it. Simple restful API"
+  available: true
+  branch: "master"
+  language: "Database"
+  stars: 0
+  thumbnail: "/assets/images/projects/segfault-database.svg"
+  files:
+    - ".cargo"
+    - "migrations"
+    - "scripts"
+    - "src"
+    - ".env"
+    - ".gitattributes"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "README.md"
+  gallery: []
+  overview:
+    - "This is the middleman between applications using my servers for say storing stats and whatnot or checking if users are subscribed to vip, and the backend databases actually storing said information, or the rest api for the donation platoform itself. Goals of this are to be efficient and async, secured with seperate auth tokens for each server contacting this service for info, and ideally this should also be stateless to allow for later use of something like kubernetes."
+    - "TODO - Implement connection to database - connect with paddle rest api - create rest api for applications using my service - stats access api - additional stats endpoints for index-based or discord - endpoint for getting top ranked players - vip check api - secure tokens identifying each server/app that can access my service for authentication - admin accounts associated with specific server tokens - Secure and Lock down the api with either NGINX or inside actix - discord bot functionality - start a bot - connect bot to api - add functions for linking accounts - [ ] create service config for running app on our server - [ ] create nginx forwarding configuration"
+"segfault-ranks":
+  about: "An RWS Ranking System for CSGO Community Servers"
+  available: true
+  branch: "no-mysql"
+  language: "ELO"
+  stars: 0
+  thumbnail: "/assets/images/projects/segfault-ranks.svg"
+  files:
+    - "scripting"
+    - "translations"
+    - ".clang-format"
+    - ".gitattributes"
+    - "README.md"
+    - "reformat.sh"
+  gallery: []
+  overview:
+    - "An RWS Ranking System for CSGO Community Servers"
+"sixteenbit":
+  about: "A pixel-art editor and run-length encoding utility."
+  available: true
+  branch: "master"
+  language: "Pixel Art"
+  stars: 1
+  thumbnail: "/assets/images/projects/sixteenbit/gallery-1.png"
+  files:
+    - "src"
+    - ".gitignore"
+    - "Cargo.lock"
+    - "Cargo.toml"
+    - "EDITOR.md"
+    - "README.md"
+    - "app.ico"
+    - "build.rs"
+    - "icon.xcf"
+    - "rle_char1.xcf"
+  gallery:
+    - "/assets/images/projects/sixteenbit/gallery-1.png"
+  overview:
+    - "Stores pixel art assets in super small domain-specific implementation of rle and 1bit encoding. These assets are then combined by some rules (or DNA) to generate some final image from any psudo-random value. Useful for unique avatar generation, or NFT avatars."
+    - "this character can be loaded with the following encoded string: 481220042001216221016041604160016040c060c040600166016122610280628001608660018403a403a002a003a002a002210221"
+"super-marble-battle":
+  about: "A fun game to play with friends! Running on v3.1.1.devel.custombuild.b5d9099626c4c180403baf0b75bd286a6b65c981"
+  available: true
+  branch: "master"
+  language: "Godot"
+  stars: 0
+  thumbnail: "/assets/images/projects/super-marble-battle/gallery-1.png"
+  files:
+    - "GLOBALS"
+    - "addons"
+    - "audio"
+    - "build"
+    - "defaults"
+    - "docs"
+    - "gamemodes"
+    - "gameplay_components"
+    - "gui"
+    - "images"
+  gallery:
+    - "/assets/images/projects/super-marble-battle/gallery-1.png"
+  overview:
+    - "Super marble battle is a fun casual game focused on multiplayer minigames, party games, and aims to be a colorful, fun, and personalized experience."
+    - "Super Marble Battle in Godot 3.1 Editor! :^)"
+"swarm-pi":
+  about: "\"swarm\" or \"ultra code\" for the pi agentic coding harness"
+  available: true
+  branch: "main"
+  language: "TypeScript"
+  stars: 0
+  thumbnail: "/assets/images/projects/swarm-pi.svg"
+  files:
+    - "agents"
+    - ".gitattributes"
+    - "BUN_GLITCH_FIX.md"
+    - "KNOWN_ISSUES.md"
+    - "README.md"
+    - "RETENTION_PLAN.md"
+    - "agents.ts"
+    - "commands.ts"
+    - "complexity.ts"
+    - "config.json"
+  gallery: []
+  overview:
+    - "A sub-agent orchestration toolkit for the pi harness. It lets the agent delegate work to a swarm of isolated sub-agents, run declarative multi-stage workflows, and autonomously decompose large goals into validated, parallel, asynchronously executed chunks - then supervise and collect all of it over a long session."
+    - "Each sub-agent runs in a separate pi process with its own context window, so delegated work never pollutes the orchestrator's context. Work runs in the background by default: the orchestrating agent spawns tasks, keeps thinking, and collects results later."
+"usb-host-passthrough":
+  about: "Teensy 4 mouse-input emulation and passthrough firmware."
+  available: true
+  branch: "main"
+  language: "Teensy"
+  stars: 8
+  thumbnail: "/assets/images/projects/usb-host-passthrough.svg"
+  files:
+    - ".gitattributes"
+    - "README.md"
+    - "usb_host_passthrough.ino"
+  gallery: []
+  overview:
+    - "This is a simplistic initial version of my USB host passthrough device for the teensy. You can plug in a keyboard and mouse into it and let it passthrough the input at exceptionally fast speed so that it is un-noticable. These inputs can then be modified by incomming commands over serial, or by an algorithim in the code if you so choose to add one."
+"wasm-battle-arena":
+  about: "A simple networked two player webasm game"
+  available: true
+  branch: "master"
+  language: "Rust"
+  stars: 2
+  thumbnail: "/assets/images/projects/wasm-battle-arena/gallery-1.gif"
+  files:
+    - ".cargo"
+    - ".github"
+    - ".vscode"
+    - "assets"
+    - "cloudflare-worker"
+    - "docs"
+    - "scripts"
+    - "src"
+    - ".gitignore"
+    - "CHANGELOG.md"
+  gallery:
+    - "/assets/images/projects/wasm-battle-arena/gallery-1.gif"
+  overview:
+    - "A competitive ghost battling game: two-player Duel or 3–8 player Last Ghost Standing, first to three round wins."
+    - "Designed in Bevy game engine initially based on the following game design tutorial series: https://johanhelsing.studio/posts/extreme-bevy Project for me to learn the basics of the bevy ecs system as well as: peer2peer deterministic synchronized game states utilizing ggrs rollback, wave function map generation, deterministic random generation, and other novel game design concepts."

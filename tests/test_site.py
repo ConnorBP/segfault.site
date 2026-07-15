@@ -169,6 +169,34 @@ class BuildOutputTests(unittest.TestCase):
         self.assertEqual(len(meme), 1)
         self.assertTrue((meme[0].get("alt") or "").strip())
 
+    def test_standard_project_pages_and_card_links(self) -> None:
+        index_path = SITE / "index.html"
+        index = self.docs[index_path]
+        card_images = [a for a in index.links if "project-image" in (a.get("class") or "").split()]
+        project_pages = sorted(SITE.glob("projects/*.html")) + [SITE / "car.html", SITE / "ghost.html"]
+        self.assertEqual(len(project_pages), 24)
+        self.assertEqual(len(card_images), 24)
+        self.assertTrue(all((a.get("href") or "").startswith(("/projects/", "/car", "/ghost")) for a in card_images))
+        for path in project_pages:
+            doc = self.docs[path]
+            self.assertTrue(any("project-page" in (attrs.get("class") or "").split() for tag, attrs in doc.tags if tag == "article"), str(path))
+            source_links = [a for a in doc.links if "source-link" in (a.get("class") or "").split()]
+            self.assertEqual(len(source_links), 1, f"missing source link in {path}")
+            self.assertRegex(source_links[0].get("href") or "", r"^https://github\.com/ConnorBP/[^/]+$")
+            self.assertTrue(any("project-overview" in (attrs.get("class") or "").split() for tag, attrs in doc.tags if tag == "div"), f"missing overview in {path}")
+            self.assertTrue(any("project-gallery" in (attrs.get("class") or "").split() or "repo-card" in (attrs.get("class") or "").split() for tag, attrs in doc.tags), f"missing visual fallback in {path}")
+
+    def test_regression_game_pages_combine_overview_and_demo(self) -> None:
+        for page, title, host in (("car.html", "Crossy Cars", "car.segfault.site"), ("ghost.html", "WASM Battle Arena", "ghost.segfault.site")):
+            path = SITE / page
+            doc = self.docs[path]
+            self.assertEqual(len(doc.iframes), 1, str(path))
+            self.assertIn(host, doc.iframes[0].get("src") or "")
+            fullscreen = [a for a in doc.links if "fullscreen-link" in (a.get("class") or "").split()]
+            self.assertEqual(len(fullscreen), 1, str(path))
+            self.assertIn(host, fullscreen[0].get("href") or "")
+            self.assertIn(title, " ".join(doc.text_parts))
+
     def test_regression_project_catalog_is_complete_and_featured(self) -> None:
         index_path = SITE / "index.html"
         source = index_path.read_text(encoding="utf-8")
@@ -188,8 +216,11 @@ class BuildOutputTests(unittest.TestCase):
     def test_regression_svg_catalog_is_safe_and_complete(self) -> None:
         svgs = sorted(PROJECT_ART.glob("*.svg"))
         self.assertEqual(len(svgs), 24)
-        rendered = {Path(urllib.parse.urlsplit(img.get("src") or "").path).name for img in self.docs[SITE / "index.html"].images if "/projects/" in (img.get("src") or "")}
-        self.assertEqual(rendered, {path.name for path in svgs})
+        rendered = [img for img in self.docs[SITE / "index.html"].images if "/projects/" in (img.get("src") or "")]
+        self.assertEqual(len(rendered), 24)
+        self.assertEqual(len({img.get("src") for img in rendered}), 24)
+        for image in rendered:
+            self.assertTrue(local_target(SITE / "index.html", image.get("src") or "")[0].is_file())
         for path in svgs:
             root = ET.parse(path).getroot()
             self.assertEqual(root.attrib.get("viewBox"), "0 0 1000 562", str(path))
@@ -203,7 +234,7 @@ class BuildOutputTests(unittest.TestCase):
         css = (SITE / "assets/css/style.css").read_text(encoding="utf-8")
         for token in ("@media (max-width: 900px)", "@media (max-width: 620px)", "prefers-reduced-motion", ":focus-visible", ".featured-grid", ".archive-grid", ".meme-signoff img"):
             self.assertIn(token, css)
-        self.assertRegex(css, r"@media \(max-width: 620px\).*?\.featured-grid,\s*\.archive-grid\s*\{\s*grid-template-columns:\s*1fr", "mobile grids must collapse to one column")
+        self.assertRegex(css, r"(?s)@media \(max-width: 620px\).*?\.featured-grid,\s*\.archive-grid\s*\{\s*grid-template-columns:\s*1fr", "mobile grids must collapse to one column")
         self.assertRegex(css, r"\.meme-signoff img\s*\{[^}]*width:\s*56px;[^}]*height:\s*72px", "meme image must remain compact")
 
 

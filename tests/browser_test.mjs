@@ -166,7 +166,7 @@ try {
 
   await navigate("/ghost.html", 1280, 900);
   const ghost = await evaluate(`(() => ({ title: document.title, h1: document.querySelector('h1')?.textContent.trim(), iframe: Boolean(document.querySelector('iframe[title]')), width: document.documentElement.scrollWidth }))()`);
-  assert(ghost.title.includes("Ghost Game Live Demo") && ghost.h1 === "Ghost Game Live Demo", "ghost demo page did not render");
+  assert(ghost.title.includes("WASM Battle Arena") && ghost.h1 === "WASM Battle Arena", "ghost project page did not render");
   assert(ghost.iframe && ghost.width <= 1280, "ghost page iframe or layout failed");
   await screenshot("ghost-full.png");
 

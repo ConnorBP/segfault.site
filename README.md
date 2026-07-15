@@ -26,6 +26,10 @@ Take a look at some of my favourite publicly listed projects :)
 - [a rusty teensy-weensy-micro controller](https://github.com/ConnorBP/Rusted-Teensy-Base)
 - [godot engine marble game](https://github.com/ConnorBP/SuperMarbleBattle)
 
+### Refresh project metadata
+
+Project descriptions, repository stats/file previews, and suitable README images are committed for deterministic GitHub Pages builds. Refresh them explicitly with `python bin/refresh_projects` (set `GITHUB_TOKEN` to avoid anonymous API limits). Use `--no-screenshots` to skip website screenshot fallbacks. Normal Jekyll builds never perform network requests.
+
 ### Some things I like
 
 - [Shadertoy](https://www.shadertoy.com/view/WdSSRd) little ray-marching shader I made on shadertoy

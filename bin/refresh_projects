@@ -1,0 +1,428 @@
+#!/usr/bin/env python3
+"""Refresh committed project metadata and safe local artwork from GitHub.
+
+This command is intentionally separate from the normal Jekyll build. It uses only
+Python's standard library; set GITHUB_TOKEN to avoid anonymous API rate limits.
+"""
+
+from __future__ import annotations
+
+import argparse
+import html
+import json
+import mimetypes
+import os
+import re
+import shutil
+import struct
+import subprocess
+import sys
+import tempfile
+import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
+from pathlib import Path, PurePosixPath
+
+ROOT = Path(__file__).resolve().parents[1]
+PROJECTS_FILE = ROOT / "_data" / "projects.yml"
+DETAILS_FILE = ROOT / "_data" / "project_details.yml"
+ART_ROOT = ROOT / "assets" / "images" / "projects"
+USER_AGENT = "segfault.site project metadata refresh"
+MAX_TEXT_BYTES = 2 * 1024 * 1024
+MAX_IMAGE_BYTES = 8 * 1024 * 1024
+ALLOWED_IMAGE_TYPES = {
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/gif": ".gif",
+    "image/webp": ".webp",
+}
+SKIP_IMAGE_WORDS = ("badge", "shield", "deploy-status", "travis", "leaderboard.svg")
+
+
+def parse_projects() -> list[dict[str, object]]:
+    """Parse this repository's deliberately small, flat projects YAML."""
+    projects: list[dict[str, object]] = []
+    current: dict[str, object] | None = None
+    for raw in PROJECTS_FILE.read_text(encoding="utf-8").splitlines():
+        match = re.match(r"^- slug:\s*[\"']?([^\"']+?)[\"']?\s*$", raw)
+        if match:
+            if current:
+                projects.append(current)
+            current = {"slug": match.group(1)}
+            continue
+        if current is None:
+            continue
+        match = re.match(r"^  ([a-z_]+):\s*(.*?)\s*$", raw)
+        if not match:
+            continue
+        key, value = match.groups()
+        if value.startswith("[") and value.endswith("]"):
+            current[key] = [item.strip() for item in value[1:-1].split(",") if item.strip()]
+        elif value in ("true", "false"):
+            current[key] = value == "true"
+        else:
+            current[key] = value.strip("\"'")
+    if current:
+        projects.append(current)
+    return projects
+
+
+def request(url: str, *, accept: str | None = None, limit: int = MAX_TEXT_BYTES) -> tuple[bytes, str]:
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https":
+        raise ValueError(f"refusing non-HTTPS URL: {url}")
+    headers = {"User-Agent": USER_AGENT}
+    if accept:
+        headers["Accept"] = accept
+    token = os.environ.get("GITHUB_TOKEN")
+    if token and parsed.hostname == "api.github.com":
+        headers["Authorization"] = f"Bearer {token}"
+    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
+        declared = response.headers.get("Content-Length")
+        if declared and int(declared) > limit:
+            raise ValueError(f"response too large: {url}")
+        body = response.read(limit + 1)
+        if len(body) > limit:
+            raise ValueError(f"response too large: {url}")
+        return body, response.headers.get_content_type().lower()
+
+
+def github_repo_name(url: str) -> str:
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https" or parsed.hostname != "github.com":
+        raise ValueError(f"not a GitHub repository URL: {url}")
+    name = parsed.path.strip("/")
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", name):
+        raise ValueError(f"unsafe GitHub repository path: {url}")
+    return name
+
+
+def clean_text(value: str, limit: int = 1200) -> str:
+    value = html.unescape(value)
+    value = unicodedata.normalize("NFKC", value).replace("\ufffd", "—")
+    value = re.sub(r"!\[[^]]*\]\([^)]*\)", "", value)
+    value = re.sub(r"\[([^]]+)\]\([^)]*\)", r"\1", value)
+    value = re.sub(r"<[^>]+>", " ", value)
+    value = re.sub(r"[`*_~]", "", value)
+    value = re.sub(r"\s+", " ", value).strip(" #>|-")
+    return value[:limit].rstrip()
+
+
+def readme_overview(markdown: str, fallback: str) -> list[str]:
+    markdown = re.sub(r"```.*?```", "", markdown, flags=re.S)
+    markdown = re.sub(r"<table.*?</table>|<picture.*?</picture>", "", markdown, flags=re.S | re.I)
+    paragraphs: list[str] = []
+    block: list[str] = []
+    seen_body = False
+    for raw in markdown.splitlines():
+        line = raw.strip()
+        if re.match(r"^#{1,6}\s+", line):
+            if block:
+                text = clean_text(" ".join(block))
+                if text:
+                    paragraphs.append(text)
+                block = []
+            if seen_body and paragraphs:
+                break
+            continue
+        if not line:
+            if block:
+                text = clean_text(" ".join(block))
+                if len(text) >= 30:
+                    paragraphs.append(text)
+                    seen_body = True
+                block = []
+                if len(paragraphs) >= 3 or sum(map(len, paragraphs)) >= 900:
+                    break
+            continue
+        if line.startswith(("![", "<img", "<a ", "[![", "|", "<!--", "</", "<div", "<p align")):
+            continue
+        if re.match(r"^(?:[-*+] |\d+\. )", line) and not block:
+            if paragraphs:
+                break
+            continue
+        block.append(line)
+    if block and len(paragraphs) < 3:
+        text = clean_text(" ".join(block))
+        if len(text) >= 30:
+            paragraphs.append(text)
+    return paragraphs[:3] or [clean_text(fallback)]
+
+
+def readme_image_urls(markdown: str, repo: str, branch: str) -> list[str]:
+    found = [a or b for a, b in re.findall(r"!\[[^]]*\]\(([^ )]+)(?:\s+[^)]*)?\)|<img[^>]+src=[\"']([^\"']+)", markdown, re.I)]
+    urls: list[str] = []
+    for raw in found:
+        raw = html.unescape(raw.strip(" <>\"'"))
+        if not raw or any(word in raw.lower() for word in SKIP_IMAGE_WORDS):
+            continue
+        parsed = urllib.parse.urlsplit(raw)
+        if parsed.scheme:
+            if parsed.scheme != "https" or parsed.hostname not in {"raw.githubusercontent.com", "user-images.githubusercontent.com", "github.com"}:
+                continue
+            if parsed.hostname == "github.com":
+                raw = raw.replace("/blob/", "/raw/", 1)
+            url = raw
+        else:
+            path = raw.lstrip("/")
+            safe_path = str(PurePosixPath(path))
+            if safe_path.startswith("../") or safe_path == "..":
+                continue
+            quoted = "/".join(urllib.parse.quote(part) for part in safe_path.split("/"))
+            url = f"https://raw.githubusercontent.com/{repo}/{urllib.parse.quote(branch)}/{quoted}"
+        if url not in urls:
+            urls.append(url)
+    return urls
+
+
+def image_dimensions(body: bytes, content_type: str) -> tuple[int, int] | None:
+    if content_type == "image/png" and body.startswith(b"\x89PNG\r\n\x1a\n") and len(body) >= 24:
+        return struct.unpack(">II", body[16:24])
+    if content_type == "image/gif" and body[:6] in (b"GIF87a", b"GIF89a") and len(body) >= 10:
+        return struct.unpack("<HH", body[6:10])
+    if content_type == "image/webp" and body[:4] == b"RIFF" and body[8:12] == b"WEBP":
+        if body[12:16] == b"VP8X" and len(body) >= 30:
+            return (1 + int.from_bytes(body[24:27], "little"), 1 + int.from_bytes(body[27:30], "little"))
+        if body[12:16] == b"VP8L" and len(body) >= 25:
+            bits = int.from_bytes(body[21:25], "little")
+            return ((bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1)
+    if content_type == "image/jpeg" and body.startswith(b"\xff\xd8"):
+        offset = 2
+        while offset + 9 < len(body):
+            if body[offset] != 0xFF:
+                offset += 1
+                continue
+            marker = body[offset + 1]
+            if marker in range(0xC0, 0xC4):
+                return struct.unpack(">HH", body[offset + 5:offset + 9])[::-1]
+            if offset + 4 > len(body):
+                break
+            offset += 2 + int.from_bytes(body[offset + 2:offset + 4], "big")
+    return None
+
+
+def download_gallery(markdown: str, repo: str, branch: str, slug: str) -> list[str]:
+    target = ART_ROOT / slug
+    target.mkdir(parents=True, exist_ok=True)
+    for old in target.glob("gallery-*"):
+        old.unlink()
+    gallery: list[str] = []
+    for url in readme_image_urls(markdown, repo, branch):
+        if len(gallery) >= 3:
+            break
+        try:
+            body, content_type = request(url, accept="image/*", limit=MAX_IMAGE_BYTES)
+            extension = ALLOWED_IMAGE_TYPES.get(content_type)
+            dimensions = image_dimensions(body, content_type)
+            if not extension or not dimensions or dimensions[0] < 320 or dimensions[1] < 180:
+                continue
+            filename = f"gallery-{len(gallery) + 1}{extension}"
+            (target / filename).write_bytes(body)
+            gallery.append(f"/assets/images/projects/{slug}/{filename}")
+        except (OSError, ValueError, urllib.error.URLError) as error:
+            print(f"warning: skipped image {url}: {error}", file=sys.stderr)
+    return gallery
+
+
+def repository_page(repo: str) -> tuple[dict[str, object], str]:
+    body, _ = request(f"https://github.com/{repo}")
+    source = body.decode("utf-8", "replace")
+    if re.search(r"Page not found|This is not the web page you are looking for", source, re.I):
+        return {"available": False}, source
+    data: dict[str, object] = {"available": True}
+    branch = re.search(r'"defaultBranch":"([^"\\]+)', source)
+    title = re.search(r"<title>GitHub - [^:]+:\s*(.*?)\s*[·�] GitHub</title>", source, re.S | re.I)
+    stars = re.search(r'Counter js-social-count[^>]*>\s*([0-9,.kK]+)\s*<', source)
+    if branch:
+        data["default_branch"] = html.unescape(branch.group(1))
+    if title:
+        data["description"] = clean_text(html.unescape(title.group(1)), 300)
+    if stars:
+        raw = stars.group(1).replace(",", "").lower()
+        data["stargazers_count"] = int(float(raw[:-1]) * 1000) if raw.endswith("k") else int(raw)
+    return data, source
+
+
+def repository_files(repo: str, branch: str, source: str = "") -> list[str]:
+    if not source:
+        try:
+            _, source = repository_page(repo)
+        except (OSError, ValueError, urllib.error.URLError):
+            return []
+    pattern = rf'href="/{re.escape(repo)}/(?:blob|tree)/{re.escape(branch)}/([^"?#]+)"'
+    files: list[str] = []
+    for value in re.findall(pattern, source):
+        name = html.unescape(value).split("/", 1)[0]
+        if name and name not in files:
+            files.append(name)
+    return files[:10]
+
+
+def find_browser() -> str | None:
+    configured = os.environ.get("CHROME_PATH")
+    candidates = [configured] if configured else []
+    if os.name == "nt":
+        candidates += [
+            r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+            r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        ]
+    else:
+        candidates += ["google-chrome", "chromium", "chromium-browser"]
+    for candidate in candidates:
+        if candidate and (Path(candidate).is_file() or shutil.which(candidate)):
+            return candidate
+    return None
+
+
+def website_preview(url: str, slug: str) -> str | None:
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https" or not parsed.hostname or parsed.hostname.endswith("github.com"):
+        return None
+    browser = find_browser()
+    if not browser:
+        print(f"warning: no browser available for {url}", file=sys.stderr)
+        return None
+    target = ART_ROOT / slug / "website-preview.png"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory() as profile:
+        command = [
+            browser, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+            "--disable-background-networking", "--window-size=1400,900", "--virtual-time-budget=7000",
+            f"--user-data-dir={profile}", f"--screenshot={target.resolve()}", url,
+        ]
+        result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=45, check=False)
+    if result.returncode or not target.is_file() or target.stat().st_size > MAX_IMAGE_BYTES:
+        target.unlink(missing_ok=True)
+        print(f"warning: screenshot failed for {url}", file=sys.stderr)
+        return None
+    return f"/assets/images/projects/{slug}/website-preview.png"
+
+
+def load_previous() -> dict[str, object]:
+    if not DETAILS_FILE.exists():
+        return {}
+    try:
+        value = json.loads(DETAILS_FILE.read_text(encoding="utf-8"))
+        return value if isinstance(value, dict) else {}
+    except (ValueError, OSError):
+        return {}
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--no-screenshots", action="store_true", help="skip website fallback screenshots")
+    args = parser.parse_args()
+    projects = parse_projects()
+    previous = load_previous()
+    details: dict[str, object] = {}
+    failures: list[str] = []
+
+    for project in projects:
+        slug = str(project["slug"])
+        repo_url = str(project["repo"])
+        repo = github_repo_name(repo_url)
+        print(f"refreshing {repo}")
+        metadata: dict[str, object] = {}
+        repo_source = ""
+        unavailable = False
+        try:
+            body, _ = request(f"https://api.github.com/repos/{repo}", accept="application/vnd.github+json")
+            metadata = json.loads(body)
+        except urllib.error.HTTPError as error:
+            if error.code == 404:
+                unavailable = True
+            elif error.code in (403, 429):
+                try:
+                    metadata, repo_source = repository_page(repo)
+                    unavailable = metadata.get("available") is False
+                except urllib.error.HTTPError as fallback_error:
+                    if fallback_error.code == 404:
+                        unavailable = True
+                    else:
+                        failures.append(f"{repo}: API {error.code}; page fallback: {fallback_error}")
+                except (OSError, ValueError, urllib.error.URLError) as fallback_error:
+                    failures.append(f"{repo}: API {error.code}; page fallback: {fallback_error}")
+            else:
+                failures.append(f"{repo}: GitHub API returned {error.code}")
+        except (OSError, ValueError, urllib.error.URLError, json.JSONDecodeError) as error:
+            failures.append(f"{repo}: {error}")
+
+        old = previous.get(slug, {}) if isinstance(previous.get(slug), dict) else {}
+        branch = str(metadata.get("default_branch") or old.get("branch") or "master")
+        about = clean_text(str(metadata.get("description") or old.get("about") or project.get("description") or ""), 300)
+        markdown = ""
+        for readme_name in ("README.md", "readme.md", "README"):
+            try:
+                body, _ = request(f"https://raw.githubusercontent.com/{repo}/{urllib.parse.quote(branch)}/{readme_name}")
+                markdown = body.decode("utf-8", "replace")
+                break
+            except urllib.error.HTTPError as error:
+                if error.code != 404:
+                    failures.append(f"{repo}: README returned {error.code}")
+                    break
+            except (OSError, ValueError, urllib.error.URLError) as error:
+                failures.append(f"{repo}: README: {error}")
+                break
+
+        overview = readme_overview(markdown, str(project.get("description") or about))
+        gallery = download_gallery(markdown, repo, branch, slug) if markdown else []
+        website = str(metadata.get("homepage") or "")
+        demo = str(project.get("demo") or "")
+        if not website and demo.startswith("https://"):
+            website = demo
+        if not gallery and website and not args.no_screenshots:
+            preview = website_preview(website, slug)
+            if preview:
+                gallery = [preview]
+        if not gallery and isinstance(old.get("gallery"), list):
+            gallery = [str(item) for item in old["gallery"] if (ROOT / str(item).lstrip("/")).is_file()]
+
+        files = repository_files(repo, branch, repo_source) if not unavailable else []
+        if not files and isinstance(old.get("files"), list):
+            files = [str(item) for item in old["files"]]
+        details[slug] = {
+            "about": about,
+            "available": not unavailable,
+            "branch": branch,
+            "files": files,
+            "gallery": gallery,
+            "language": str(metadata.get("language") or old.get("language") or (project.get("tags") or [""])[0]),
+            "overview": overview,
+            "stars": int(metadata.get("stargazers_count") or old.get("stars") or 0),
+            "thumbnail": gallery[0] if gallery else f"/assets/images/projects/{slug}.svg",
+        }
+
+    DETAILS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    lines: list[str] = []
+    for slug, values in sorted(details.items()):
+        lines.append(f"{json.dumps(slug, ensure_ascii=False)}:")
+        for key in ("about", "available", "branch", "language", "stars", "thumbnail"):
+            value = values[key]
+            if isinstance(value, bool):
+                rendered_value = "true" if value else "false"
+            elif isinstance(value, int):
+                rendered_value = str(value)
+            else:
+                rendered_value = json.dumps(value, ensure_ascii=False)
+            lines.append(f"  {key}: {rendered_value}")
+        for key in ("files", "gallery", "overview"):
+            items = values[key]
+            if not items:
+                lines.append(f"  {key}: []")
+            else:
+                lines.append(f"  {key}:")
+                lines.extend(f"    - {json.dumps(item, ensure_ascii=False)}" for item in items)
+    rendered = "\n".join(lines) + "\n"
+    temporary = DETAILS_FILE.with_suffix(".tmp")
+    temporary.write_text(rendered, encoding="utf-8")
+    temporary.replace(DETAILS_FILE)
+    if failures:
+        print("refresh completed with errors:\n- " + "\n- ".join(failures), file=sys.stderr)
+        return 1
+    print(f"wrote {DETAILS_FILE.relative_to(ROOT)} for {len(details)} projects")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
